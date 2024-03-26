@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import TicketModal from "../tickets/TicketModal";
 interface DynamoDBEventItem {
   eventId: { S: string };
   eventName: { S: string };
@@ -17,10 +18,11 @@ interface Event {
 }
 const EventsList: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
+  const [activeEventId, setActiveEventId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [activeEventId]);
 
   const fetchEvents = async () => {
     // Replace this URL with your API endpoint
@@ -63,6 +65,10 @@ const EventsList: React.FC = () => {
     }
   };
 
+  const handleBuyTickets = (eventId: string) => {
+    setActiveEventId(eventId);
+  };
+
   return (
     <div className="events-list">
       <h2 className="text-xl text-center font-semibold my-6">All Events</h2>
@@ -83,11 +89,20 @@ const EventsList: React.FC = () => {
                 Price:{" "}
                 <span className="font-semibold">${event.ticketPrice}</span>
               </p>
-              <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              <button
+                onClick={() => handleBuyTickets(event.eventId)}
+                className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
                 Buy Tickets
               </button>
             </li>
           ))}
+          {activeEventId && (
+            <TicketModal
+              eventId={activeEventId}
+              onClose={() => setActiveEventId(null)}
+            />
+          )}{" "}
         </ul>
       ) : (
         <p className="text-center">No events found.</p>
