@@ -17,6 +17,23 @@ function Eventform() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log(eventData);
+    const endpoint =
+      "https://c5ntv1dcw6.execute-api.eu-west-1.amazonaws.com/dev/event";
+
+    fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(eventData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
   return (
     <div className="">
@@ -53,6 +70,24 @@ function Eventform() {
             onChange={handleInputChange}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
             placeholder="Event Description"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="eventDate"
+            className="block mb-2 text-sm font-medium text-gray-900"
+          >
+            Event Date
+          </label>
+          <input
+            type="date"
+            id="eventDate"
+            name="eventDate"
+            value={eventData.eventDate}
+            onChange={handleInputChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+            placeholder="Select the event date"
             required
           />
         </div>
