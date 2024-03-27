@@ -1,6 +1,9 @@
 import React from "react";
+import { useAuth } from "../../context/AuthContext";
 
 function Navbar() {
+  const { user } = useAuth();
+
   return (
     <nav className=" border-gray-200 bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -31,15 +34,7 @@ function Navbar() {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 17 14"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M1 1h15M1 7h15M1 13h15"
-            />
-          </svg>
+          ></svg>
         </button>
         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
           <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0  bg-gray-800 md:bg-gray-900 border-gray-700">
@@ -84,6 +79,26 @@ function Navbar() {
                 Contact
               </a>
             </li>
+            {user && (
+              <li>
+                <span className="block py-2 px-3 rounded text-white">
+                  Welcome, {user.email}
+                </span>
+              </li>
+            )}
+            {!user && (
+              <li>
+                <button
+                  onClick={() =>
+                    (window.location.href =
+                      "https://globaleventmanager.auth.eu-west-1.amazoncognito.com/login?response_type=code&client_id=3c65sj6c3ok6ug3nqsoloi2gn4&redirect_uri=http://localhost:3000/callback")
+                  }
+                  className="block py-2 px-3 rounded text-white hover:bg-gray-700 focus:outline-none focus:ring"
+                >
+                  Log In / Sign Up
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       </div>
