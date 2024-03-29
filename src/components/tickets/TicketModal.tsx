@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 interface TicketModalProps {
   eventId: string;
   onClose: () => void;
 }
+
 interface Ticket {
   TicketId: string;
   EventId: string;
@@ -11,6 +13,8 @@ interface Ticket {
   TicketType: string[];
 }
 const TicketModal = ({ eventId, onClose }: TicketModalProps) => {
+  const { user } = useAuth();
+
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [buyAmmount, setBuyAmount] = useState(1);
   useEffect(() => {
@@ -60,8 +64,43 @@ const TicketModal = ({ eventId, onClose }: TicketModalProps) => {
     (ticket) => ticket.Status === "Available"
   ).length;
 
-  const handleBuyTickets = () => {
-    console.log(`Buying ${buyAmmount} tickets for event ${eventId}`);
+  const handleBuyTickets = async () => {
+    console.log(`Attempting to buy ${buyAmmount} tickets for event ${eventId}`);
+    // Replace with your actual endpoint and add headers/authorization as needed
+    const buyEndpoint = `https://c5ntv1dcw6.execute-api.eu-west-1.amazonaws.com/dev/tickets/purchase`;
+
+    try {
+      const userId = user?.username; // Acquire this from the authenticated user session
+      const response = await fetch(buyEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Include authorization token if needed
+        },
+        body: JSON.stringify({
+          userId,
+          eventId,
+          quantity: buyAmmount,
+        }),
+      });
+
+      const result = await response.json();
+      console.log("Purchase result:", result);
+
+      if (response.ok) {
+        // Handle successful purchase
+        console.log(
+          `Successfully bought ${buyAmmount} tickets for event ${eventId}`
+        );
+        // Refresh the tickets list or update UI accordingly
+        fetchTickets();
+      } else {
+        // Handle errors (e.g., not enough tickets, payment failure)
+        console.error("Purchase failed:", result.message);
+      }
+    } catch (error) {
+      console.error("Error buying tickets:", error);
+    }
   };
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full ">

@@ -1,14 +1,11 @@
 // AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { CognitoUserPool } from "amazon-cognito-identity-js";
 import { jwtDecode } from "jwt-decode";
 
-const poolData = {
-  UserPoolId: "eu-west-1_29EN5Z0Ia",
-  ClientId: "3c65sj6c3ok6ug3nqsoloi2gn4",
-};
-
-const UserPool = new CognitoUserPool(poolData);
+// const poolData = {
+//   UserPoolId: "eu-west-1_29EN5Z0Ia",
+//   ClientId: "3c65sj6c3ok6ug3nqsoloi2gn4",
+// };
 
 interface User {
   username: string;
@@ -19,6 +16,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   handleTokens: (tokens: any) => void;
+  signOut: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -62,6 +60,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Invalid token specified: must be a string.");
     }
   };
+  const signOut = () => {
+    // Clear the authentication tokens from local storage
+    localStorage.removeItem("tokens");
+    console.log("signout user");
+    // Reset the user state to null
+    setUser(null);
+  };
 
   const handleTokens = (tokens: any) => {
     console.log("tokens", tokens);
@@ -76,7 +81,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, handleTokens }}>
+    <AuthContext.Provider value={{ user, handleTokens, signOut }}>
       {children}
     </AuthContext.Provider>
   );

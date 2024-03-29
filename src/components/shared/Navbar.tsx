@@ -2,8 +2,11 @@ import React from "react";
 import { useAuth } from "../../context/AuthContext";
 
 function Navbar() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
+  const handleLogout = () => {
+    signOut();
+  };
   return (
     <nav className=" border-gray-200 bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -83,6 +86,11 @@ function Navbar() {
               <li>
                 <span className="block py-2 px-3 rounded text-white">
                   Welcome, {user.email}
+                </span>
+                <span>
+                  <button onClick={handleLogout} className="">
+                    Logout
+                  </button>
                 </span>
               </li>
             )}
