@@ -76,7 +76,7 @@ function Navbar() {
                 <button
                   onClick={() =>
                     (window.location.href =
-                      "https://globaleventmanager.auth.eu-west-1.amazoncognito.com/login?response_type=code&client_id=3c65sj6c3ok6ug3nqsoloi2gn4&redirect_uri=http://localhost:3000/callback")
+                      "https://globaleventmanager.auth.eu-west-1.amazoncognito.com/login?response_type=code&client_id=3c65sj6c3ok6ug3nqsoloi2gn4&redirect_uri=https://d3dfz42azvvbqx.cloudfront.net/callback")
                   }
                   className="block py-2 px-3 rounded text-white hover:bg-gray-700 focus:outline-none focus:ring"
                 >
