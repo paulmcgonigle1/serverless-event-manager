@@ -11,6 +11,7 @@ interface Ticket {
   EventId: string;
   Status: string;
   TicketType: string[];
+  UserId: string;
 }
 const TicketModal = ({ eventId, onClose }: TicketModalProps) => {
   const { user } = useAuth();
@@ -44,6 +45,7 @@ const TicketModal = ({ eventId, onClose }: TicketModalProps) => {
         const Status = item.Status?.S;
         // Assuming TicketType is a string for simplicity; adjust based on actual structure
         const TicketType = item.TicketType?.S;
+        const UserId = item.UserId?.S;
 
         return {
           TicketId,
@@ -51,6 +53,7 @@ const TicketModal = ({ eventId, onClose }: TicketModalProps) => {
           Status,
           // Ensure ticketType is treated correctly depending on its structure
           TicketType: TicketType ? [TicketType] : [],
+          UserId,
         };
       });
 
@@ -78,7 +81,7 @@ const TicketModal = ({ eventId, onClose }: TicketModalProps) => {
           // Include authorization token if needed
         },
         body: JSON.stringify({
-          userId,
+          userId: userId,
           eventId,
           quantity: buyAmmount,
         }),
@@ -87,16 +90,23 @@ const TicketModal = ({ eventId, onClose }: TicketModalProps) => {
       const result = await response.json();
       console.log("Purchase result:", result);
 
-      if (response.ok) {
+      if (response.status === 200) {
         // Handle successful purchase
         console.log(
           `Successfully bought ${buyAmmount} tickets for event ${eventId}`
         );
         // Refresh the tickets list or update UI accordingly
         fetchTickets();
-      } else {
+      } else if (response.status === 422) {
         // Handle errors (e.g., not enough tickets, payment failure)
-        console.error("Purchase failed:", result.message);
+        console.error("Not Enough Tickets:", result.message);
+      } else {
+        console.error(
+          "Purchase failed:",
+          result.message,
+          "Response status",
+          response.status
+        );
       }
     } catch (error) {
       console.error("Error buying tickets:", error);
@@ -118,7 +128,6 @@ const TicketModal = ({ eventId, onClose }: TicketModalProps) => {
         <input
           type="number"
           min="1"
-          max={availableTicketCount}
           value={buyAmmount}
           onChange={(e) => setBuyAmount(Number(e.target.value))}
           className="m-4 border p-1"

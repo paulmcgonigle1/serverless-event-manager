@@ -6,6 +6,7 @@ import { useAuth } from "../../../context/AuthContext";
 const Callback = () => {
   const { handleTokens } = useAuth(); // Use handleTokens from AuthProvider
   const [tokensHandled, setTokensHandled] = useState(false);
+  const navigate = useNavigate(); // Get the navigate function from React Router DOM
 
   useEffect(() => {
     // Assuming you're using the "code" flow
@@ -33,6 +34,7 @@ const Callback = () => {
         .then((data) => {
           handleTokens(data);
           setTokensHandled(true);
+          navigate("/");
         })
         .catch((error) =>
           console.error("Error exchanging code for tokens:", error)

@@ -58,37 +58,14 @@ function Navbar() {
                 Tickets
               </a>
             </li>
-            <li>
-              <a
-                href="#"
-                className="block py-2 px-3 rounded  md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0  text-white md:   hover:bg-gray-700  hover:text-white md: hover:bg-transparent"
-              >
-                Services
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block py-2 px-3  rounded  md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0  text-white md:   hover:bg-gray-700  hover:text-white md: hover:bg-transparent"
-              >
-                Pricing
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block py-2 px-3  rounded  md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0  text-white md:   hover:bg-gray-700  hover:text-white md: hover:bg-transparent"
-              >
-                Contact
-              </a>
-            </li>
+
             {user && (
               <li>
                 <span className="block py-2 px-3 rounded text-white">
                   Welcome, {user.email}
                 </span>
                 <span>
-                  <button onClick={handleLogout} className="">
+                  <button onClick={handleLogout} className="bg-blue-200">
                     Logout
                   </button>
                 </span>
